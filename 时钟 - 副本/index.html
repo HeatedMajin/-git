@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>超酷Bootstrap 3 隐藏滑动侧边栏菜单</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap-3.css">
+	<link rel="stylesheet" href="css/style.css">
+
+</head>
+<body>
+	
+	<div id="wrapper">
+        <div class="overlay"></div>
+    
+        <!-- Sidebar -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
+            <ul class="nav sidebar-nav">
+                <li class="sidebar-brand">
+                    <a href="#">
+                       D3 for clock
+                    </a>
+                </li>
+                <li>
+                    <a href="clock1.html"><i class="fa fa-fw fa-home"></i> clock1</a>
+                </li>
+                <li>
+                    <a href="clock2.html"><i class="fa fa-fw fa-home"></i> clock2</a>
+                </li>
+                <li>
+                    <a href="clock3.html"><i class="fa fa-fw fa-home"></i> clock3</a>
+                </li>
+                <li>
+                    <a href="clock4.html"><i class="fa fa-fw fa-home"></i> clock4</a>
+                </li>
+                <li>
+                    <a href="clock5.html"><i class="fa fa-fw fa-home"></i> clock5</a>
+                </li>
+                <li>
+                    <a href="clock6.html"><i class="fa fa-fw fa-home"></i> clock6</a>
+                </li>
+                <li>
+                    <a href="clock7.html"><i class="fa fa-fw fa-home"></i> clock7</a>
+                </li>
+                <li>
+                    <a href="clock8.html"><i class="fa fa-fw fa-home"></i> clock8</a>
+                </li>
+                <li>
+                    <a href="clock9.html"><i class="fa fa-fw fa-home"></i> clock9</a>
+                </li>
+                <li>
+                    <a href="clock10.html"><i class="fa fa-fw fa-home"></i> clock10</a>
+                </li>
+            </ul>
+        </nav>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+          <button type="button" class="hamburger is-closed animated fadeInLeft" data-toggle="offcanvas">
+            <span class="hamb-top"></span>
+            <span class="hamb-middle"></span>
+            <span class="hamb-bottom"></span>
+          </button>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-lg-offset-2">
+                        <h1 class="page-header">使用D3.js 设计时钟（共十款）</h1>  
+                        <p>班级：15基地</p>
+                        <p>姓名：马金超</p>
+                        <p>学号：201500301198</p>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+	
+	<script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>
+	<script src="http://www.jq22.com/jquery/bootstrap-3.3.4.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function () {
+		  var trigger = $('.hamburger'),
+		      overlay = $('.overlay'),
+		     isClosed = false;
+
+		    trigger.click(function () {
+		      hamburger_cross();      
+		    });
+
+		    function hamburger_cross() {
+
+		      if (isClosed == true) {          
+		        overlay.hide();
+		        trigger.removeClass('is-open');
+		        trigger.addClass('is-closed');
+		        isClosed = false;
+		      } else {   
+		        overlay.show();
+		        trigger.removeClass('is-closed');
+		        trigger.addClass('is-open');
+		        isClosed = true;
+		      }
+		  }
+		  
+		  $('[data-toggle="offcanvas"]').click(function () {
+		        $('#wrapper').toggleClass('toggled');
+		  });  
+		});
+	</script>
+</body>
+</html>
