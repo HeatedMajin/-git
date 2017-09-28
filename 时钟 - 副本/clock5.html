@@ -2,11 +2,15 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="Keywords" content="关键词，关键字">
-    <meta name="Description" content="描述信息">
-    <title>时钟5:点图</title>
-
+    <title>D3 for clock</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-3.css">
+    <link rel="stylesheet" href="css/style.css">
     <style type="text/css">
+    body{
+        height:1000px;
+        background-color: #c3a4ef;
+    }
+
     .axis path,
     .axis line{
         fill: none;
@@ -43,142 +47,119 @@
         font-size: 12px;
         color: black;
     }
+    #time {
+        float: right;
+        margin-right: 400px;
+
+        width:100px;
+        height:20px;
+        font-size: 20px;
+        line-height: 20px;
+        color: white;
+    }
+
+    svg{
+        margin: 0px 200px;
+        color: black;
+    }
     </style>
+
 </head>
 <body>
-    <div id = "time"></div>
-    <!-- 引入D3 -->
-    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>  
+    
+    <div id="wrapper">
+        <div class="overlay"></div>
+    
+        <!-- Sidebar -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
+            <ul class="nav sidebar-nav">
+                <li class="sidebar-brand">
+                    <a href="#">
+                       D3 for clock
+                    </a>
+                </li>
+                <li>
+                    <a href="clock1.html"><i class="fa fa-fw fa-home"></i> clock1</a>
+                </li>
+                <li>
+                    <a href="clock2.html"><i class="fa fa-fw fa-home"></i> clock2</a>
+                </li>
+                <li>
+                    <a href="clock3.html"><i class="fa fa-fw fa-home"></i> clock3</a>
+                </li>
+                <li>
+                    <a href="clock4.html"><i class="fa fa-fw fa-home"></i> clock4</a>
+                </li>
+                <li>
+                    <a href="clock5.html"><i class="fa fa-fw fa-home"></i> clock5</a>
+                </li>
+                <li>
+                    <a href="clock6.html"><i class="fa fa-fw fa-home"></i> clock6</a>
+                </li>
+                <li>
+                    <a href="clock7.html"><i class="fa fa-fw fa-home"></i> clock7</a>
+                </li>
+                <li>
+                    <a href="clock8.html"><i class="fa fa-fw fa-home"></i> clock8</a>
+                </li>
+                <li>
+                    <a href="clock9.html"><i class="fa fa-fw fa-home"></i> clock9</a>
+                </li>
+                <li>
+                    <a href="clock10.html"><i class="fa fa-fw fa-home"></i> clock10</a>
+                </li>
+            </ul>
+        </nav>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <button type="button" class="hamburger is-closed animated fadeInLeft" data-toggle="offcanvas">
+                <span class="hamb-top"></span>
+                <span class="hamb-middle"></span>
+                <span class="hamb-bottom"></span>
+            </button>
+            <div id = "time"></div>
+
+            <!-- 引入D3 -->
+            <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>  
+            <script type="text/javascript" src="js/clock5.js"></script></div>
+        <!-- /#page-content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+    
+    <script src="js/jquery-1.js"></script>
+    <script src="js/bootstrap-3.js"></script>
     <script type="text/javascript">
+        $(document).ready(function () {
+          var trigger = $('.hamburger'),
+              overlay = $('.overlay'),
+             isClosed = false;
 
-        //生成画布        
-        var width = 800;
-        var height = 600;
-        var svg = d3.select("body").append("svg")
-            .attr("width",width)
-            .attr("height",height)
-            .append("g")
-            .attr("transform","translate("+60+","+20+")");
+            trigger.click(function () {
+              hamburger_cross();      
+            });
 
-        var axisLen = 500;
+            function hamburger_cross() {
 
-        /***生成线性比例尺***/
-        var xscale = d3.scale.linear()
-            .domain([0,3])
-            .range([0,300]);
-        var yscale = d3.scale.linear()
-            .domain([60,0])
-            .range([0,axisLen]);
-
-        /*** 创建坐标轴 ***/
-        //创建y轴
-        var yAxis = d3.svg.axis()
-            .scale(yscale)
-            .orient("left")
-            .ticks(31);            
-        //创建x轴
-        var xAxis = d3.svg.axis()
-            .scale(xscale)
-            .orient("bottom")
-            .tickValues(["1","2","3"]);
-
-        /*** 添加坐标轴 ***/
-        //添加y轴
-        svg.append("g")
-            .attr("class","axis")
-            .call(yAxis);
-        //添加x轴
-        svg.append("g")
-            .attr("class","axis")
-            .attr("transform","translate(0,"+axisLen+")")
-            .call(xAxis);
-
-        //将数字格式化，小于9的前面加0
-        function FormatTime(hour,minute,second){
-            if(hour<10){
-                hour = "0"+hour;
-            }
-            if(minute<10){
-                minute= "0"+minute;
-            }
-            if(second <10){
-                second = "0"+second;
-
-            }
-            return hour+":"+minute+":"+second;
-        }
-
-        DrawNodes();
-
-        function DrawNodes(){
-            //获取当前时间
-            var nowdate = new Date();
-            var hour = nowdate.getHours();
-            var minute = nowdate.getMinutes();
-            var second = nowdate.getSeconds();
-
-
-            //得到显示时间的div，设置其上面的 显示文字
-            var time = document.getElementById("time");
-            time.innerText = FormatTime(hour,minute,second);
-
-            //清除以前画的点，重新绘制
-            svg.selectAll(".second").remove();
-            svg.selectAll(".minute").remove();
-            svg.selectAll(".hour").remove();
-            
-
-            var rectWidth = 50;
-            //绘制秒圈
-            svg.append("circle")
-                .attr("class","hour")
-                .attr("r",4)
-                .attr("cx",100)
-                .attr("cy",function(){
-                    return yscale(hour);
-                });
-            svg.append("circle")
-                .attr("class","minute")
-                .attr("r",4)
-                .attr("cx",200)
-                .attr("cy",function(){
-                    return yscale(minute);
-                });
-            svg.append("circle")
-                .attr("class","second")
-                .attr("r",4)
-                .attr("cx",300)
-                .attr("cy",function(){
-                    return yscale(second);
-                });
-
-            //删除文字
-            svg.selectAll(".timeText").remove();
-            //添加文字
-            var legend= svg.append("g")
-                .attr("class","timeText");
-
-            legend.append("text")
-                .attr("x",100)
-                .attr("y",function(){
-                    return yscale(hour);
-                })
-                .text("时:"+hour);
-            legend.append("text")
-                .attr("x",200)
-                .attr("y",function(){
-                    return yscale(minute);
-                })
-                .text("分:"+minute);
-            legend.append("text")
-                .attr("x",300)
-                .attr("y",function(){
-                    return yscale(second);
-                })
-                .text("秒:"+second);
-        }
-        //设置重新绘制的时间间隔
-        setInterval(DrawNodes, 1000);
+              if (isClosed == true) {          
+                overlay.hide();
+                trigger.removeClass('is-open');
+                trigger.addClass('is-closed');
+                isClosed = false;
+              } else {   
+                overlay.show();
+                trigger.removeClass('is-closed');
+                trigger.addClass('is-open');
+                isClosed = true;
+              }
+          }
+          
+          $('[data-toggle="offcanvas"]').click(function () {
+                $('#wrapper').toggleClass('toggled');
+          });  
+        });
     </script>
 </body>
 </html>

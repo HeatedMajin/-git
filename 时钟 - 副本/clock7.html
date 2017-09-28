@@ -2,13 +2,13 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="Keywords" content="关键词，关键字">
-    <meta name="Description" content="描述信息">
-    <title>时钟7:转盘</title>
-
+    <title>D3 for clock</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-3.css">
+    <link rel="stylesheet" href="css/style.css">
     <style type="text/css">
     body{
         height:1000px;
+        background-color: #c3a4ef;
     }
     .axis path,
     .axis line{
@@ -23,287 +23,123 @@
     }
 
     #time {
-        margin: 10px 20px;
+        float: right;
+        margin-right: 400px;
 
         width:100px;
         height:20px;
         font-size: 20px;
         line-height: 20px;
+        color: white;
     }
 
-    .timeText{
-        transform:translate(10px,16px);
-        font-size: 12px;
+    .time_circle{
+        fill: none;
+        stroke: red;
+        stroke-width: 1px;
+    }
+    svg{
+        margin: 0px 200px;
         color: black;
     }
     </style>
+
 </head>
 <body>
-    <div id = "time"></div>
-    <!-- 引入D3 -->
-    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>  
+    
+    <div id="wrapper">
+        <div class="overlay"></div>
+    
+        <!-- Sidebar -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
+            <ul class="nav sidebar-nav">
+                <li class="sidebar-brand">
+                    <a href="#">
+                       D3 for clock
+                    </a>
+                </li>
+                <li>
+                    <a href="clock1.html"><i class="fa fa-fw fa-home"></i> clock1</a>
+                </li>
+                <li>
+                    <a href="clock2.html"><i class="fa fa-fw fa-home"></i> clock2</a>
+                </li>
+                <li>
+                    <a href="clock3.html"><i class="fa fa-fw fa-home"></i> clock3</a>
+                </li>
+                <li>
+                    <a href="clock4.html"><i class="fa fa-fw fa-home"></i> clock4</a>
+                </li>
+                <li>
+                    <a href="clock5.html"><i class="fa fa-fw fa-home"></i> clock5</a>
+                </li>
+                <li>
+                    <a href="clock6.html"><i class="fa fa-fw fa-home"></i> clock6</a>
+                </li>
+                <li>
+                    <a href="clock7.html"><i class="fa fa-fw fa-home"></i> clock7</a>
+                </li>
+                <li>
+                    <a href="clock8.html"><i class="fa fa-fw fa-home"></i> clock8</a>
+                </li>
+                <li>
+                    <a href="clock9.html"><i class="fa fa-fw fa-home"></i> clock9</a>
+                </li>
+                <li>
+                    <a href="clock10.html"><i class="fa fa-fw fa-home"></i> clock10</a>
+                </li>
+            </ul>
+        </nav>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <button type="button" class="hamburger is-closed animated fadeInLeft" data-toggle="offcanvas">
+                <span class="hamb-top"></span>
+                <span class="hamb-middle"></span>
+                <span class="hamb-bottom"></span>
+            </button>
+            <div id = "time"></div>
+
+            <!-- 引入D3 -->
+            <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>  
+            <script type="text/javascript" src="js/clock7.js"></script></div>
+        <!-- /#page-content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+    
+    <script src="js/jquery-1.js"></script>
+    <script src="js/bootstrap-3.js"></script>
     <script type="text/javascript">
+        $(document).ready(function () {
+          var trigger = $('.hamburger'),
+              overlay = $('.overlay'),
+             isClosed = false;
 
-        //生成画布        
-        var width = 800;
-        var height = 1000;
-        var svg = d3.select("body").append("svg")
-            .attr("width",width)
-            .attr("height",height)
-            .append("g")
-            .attr("transform","translate("+400+","+400+")");
+            trigger.click(function () {
+              hamburger_cross();      
+            });
 
-        var dataset = new Array(60);
-        for(var i=0;i<60;i++){
-            dataset[i]=1;
-        }
+            function hamburger_cross() {
 
-        var dataset2 = new Array(24);
-         for(var i=0;i<24;i++){
-            dataset2[i]=1;
-        }
-
-        //饼图布局
-        var pie =d3.layout.pie();//生成个饼图
-        var piedata = pie(dataset);//饼图数据
-        var piedata2 = pie(dataset2);//饼图数据
-
-        var outR =400;
-        var inR = 360;
-        var inR2 = 320;
-        var inR3 = 280;
-
-        
-        //弧生成器
-        var arc1 = d3.svg.arc()     //弧生成器
-                    .innerRadius(inR)//外半径
-                    .outerRadius(outR) //内半径
-                    ;
-        var arc2 = d3.svg.arc()
-                    .innerRadius(inR2)//外半径
-                    .outerRadius(inR) //内半径
-                    ;
-        var arc3 = d3.svg.arc()
-                    .innerRadius(inR3)//外半径
-                    .outerRadius(inR2) //内半径
-                    ;
-
-        var selectSector = d3.svg.arc()
-                    .innerRadius(outR)//外半径
-                    .outerRadius(inR3-20) //内半径
-                    ;
-
-        var second_circle= svg.append("g")
-            .attr("class","second_circle");
-        var minute_circle= svg.append("g")
-            .attr("class","minute_circle");
-        var hour_circle= svg.append("g")
-            .attr("class","hour_circle");
-
-        var select_circle= svg.append("g")
-            .attr("class","select_circle");
-
-
-        var gs_second = second_circle.selectAll("g")
-            .data(piedata)
-            .enter()
-            .append("g");
-         var gs_minute = minute_circle.selectAll("g")
-            .data(piedata)
-            .enter()
-            .append("g");
-         var gs_hour = hour_circle.selectAll("g")
-            .data(piedata2)
-            .enter()
-            .append("g");
-
-        var gs_select = select_circle.append("g")
-            .attr("id","dddd")
-            .data([piedata[0]]);
-
-        gs_select.append("path")
-            .attr("d",function(d,i){
-                return selectSector(d);
-            })
-            .attr("transform","rotate("+(-1*360/60/2)+")")
-            .attr("fill","none")
-            .attr("stroke","black")
-            .attr("stroke-width","4");
-
-           
-        
-
-        gs_second.append("path")
-            .attr("fill",function(d,i){
-                if((i+1)%5==0){
-                    return "rgb(35,76,110)";    
-                }else{
-                    return "steelblue";
-                }
-            })
-            .attr("d",function(d,i){
-                return arc1(d);
-            })
-            .on("mouseover",function(d,i){  //鼠标移上变黄
-                d3.select(this)
-                    .style("fill","red");
-            })
-            .on("mouseout",function(d,i){
-                d3.select(this)
-                    .transition()
-                    .duration(200)
-                    .style("fill",function(){
-                        if((i+1)%5==0){
-                            return "rgb(35,76,110)";    
-                        }else{
-                            return "steelblue";
-                        }
-                    });
-            });//鼠标移出变回原色;;
-        gs_minute.append("path")
-            .attr("fill",function(d,i){
-                if((i+1)%5==0){
-                    return "rgb(35,76,110)";    
-                }else{
-                    return "steelblue";
-                }
-            })
-            .attr("d",function(d,i){
-                return arc2(d);
-            })
-            .on("mouseover",function(d,i){  //鼠标移上变黄
-                d3.select(this)
-                    .style("fill","red");
-            })
-            .on("mouseout",function(d,i){
-                d3.select(this)
-                    .transition()
-                    .duration(200)
-                    .style("fill",function(){
-                        if((i+1)%5==0){
-                            return "rgb(35,76,110)";    
-                        }else{
-                            return "steelblue";
-                        }
-                    });
-            });//鼠标移出变回原色;;
-        gs_hour.append("path")
-            .attr("fill",function(d,i){
-                if((i+2)%5==0){
-                    return "rgb(35,76,110)";    
-                }else{
-                    return "steelblue";
-                }
-            })
-            .attr("d",function(d,i){
-                return arc3(d);
-            })
-            .on("mouseover",function(d,i){  //鼠标移上变黄
-                d3.select(this)
-                    .style("fill","red");
-            })
-            .on("mouseout",function(d,i){
-                d3.select(this)
-                    .transition()
-                    .duration(200)
-                    .style("fill",function(){
-                        if((i+2)%5==0){
-                            return "rgb(35,76,110)";    
-                        }else{
-                            return "steelblue";
-                        }
-                    });
-            });//鼠标移出变回原色;;
-      
-
-        svg.append("text")
-            .attr("class","explain")
-            .attr("x",-200)
-            .text("由内向外依次是：时、分、秒。黑框选出来的是现在的时间。");
-        //将数字格式化，小于9的前面加0
-        function FormatTime(hour,minute,second){
-            if(hour<10){
-                hour = "0"+hour;
-            }
-            if(minute<10){
-                minute= "0"+minute;
-            }
-            if(second <10){
-                second = "0"+second;
-
-            }
-            return hour+":"+minute+":"+second;
-        }
-
-        DrawNodes();
-
-        function DrawNodes(){
-
-            //获取当前时间
-            var nowdate = new Date();
-            var hour = nowdate.getHours();
-            var minute = nowdate.getMinutes();
-            var second = nowdate.getSeconds();
-
-
-            //得到显示时间的div，设置其上面的 显示文字
-            var time = document.getElementById("time");
-            time.innerText = FormatTime(hour,minute,second);
-
-            //清除以前画的字，重新绘制        
-            svg.selectAll(".tick").remove();
-
-            gs_second.append("text")
-                .attr("class","tick")
-                .attr("transform",function(d){
-                    return "translate(" + arc1.centroid(d) + ") rotate("+(-1*(second*360/60+360/60/2))+")";
-                })
-                .attr("text-anchor","middle")
-                .attr("fill","white")
-                .text(function(d,i){
-                    return 59-i;
-                });
-            gs_minute.append("text")
-                .attr("class","tick")
-                .attr("transform",function(d){
-                    return "translate(" + arc2.centroid(d) + ") rotate("+(-1*(minute*360/60+360/60/2))+")";
-                })
-                .attr("text-anchor","middle")
-                .attr("fill","white")
-                .text(function(d,i){
-                    return 59-i;
-                });
-            gs_hour.append("text")
-                .attr("class","tick")
-                .attr("transform",function(d){
-                    // console.log(d);
-                    return "translate(" + arc3.centroid(d) + ") rotate("+(-1*(hour*360/24+360/24/2))+")";
-                })
-                .attr("text-anchor","middle")
-                .attr("fill","white")
-                .text(function(d,i){
-                    return 23-i;
-                });
-            //旋转秒圈
-            svg.select(".second_circle") 
-                .attr("transform",function(d,i){
-                    return "rotate("+(second*360/60+360/60/2)+")";
-                });
-             //旋转秒圈
-            svg.select(".minute_circle") 
-                .attr("transform",function(d,i){
-                    return "rotate("+(minute*360/60+360/60/2)+")";
-                });
-             //旋转秒圈
-            svg.select(".hour_circle") 
-                .attr("transform",function(d,i){
-                    return "rotate("+(hour*360/24+360/24/2)+")";
-                });
-
+              if (isClosed == true) {          
+                overlay.hide();
+                trigger.removeClass('is-open');
+                trigger.addClass('is-closed');
+                isClosed = false;
+              } else {   
+                overlay.show();
+                trigger.removeClass('is-closed');
+                trigger.addClass('is-open');
+                isClosed = true;
+              }
+          }
           
-        }
-        //设置重新绘制的时间间隔
-        setInterval(DrawNodes, 1000);
+          $('[data-toggle="offcanvas"]').click(function () {
+                $('#wrapper').toggleClass('toggled');
+          });  
+        });
     </script>
 </body>
 </html>

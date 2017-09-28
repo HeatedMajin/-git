@@ -1,78 +1,180 @@
+
 //生成画布        
 var width = 800;
-var height = 600;
+var height = 1000;
 var svg = d3.select("body").append("svg")
     .attr("width",width)
     .attr("height",height)
     .append("g")
-    .attr("transform","translate("+60+","+30+")");
+    .attr("transform","translate("+400+","+400+")");
 
-var axisLen = 500;
+var dataset = new Array(60);
+for(var i=0;i<60;i++){
+    dataset[i]=1;
+}
 
-/***生成线性比例尺***/
-//x，z比例尺是从小到大
-var xscale = d3.scale.linear()
-    .domain([0,60])
-    .range([0,axisLen]);
-//y比例尺是从大到小
-var yscale = d3.scale.linear()
-    .domain([60,0])
-    .range([0,axisLen]);
+var dataset2 = new Array(24);
+ for(var i=0;i<24;i++){
+    dataset2[i]=1;
+}
 
-/*** 创建坐标轴 ***/
-//创建y轴
-var yAxis = d3.svg.axis()
-    .scale(yscale)
-    .orient("left")
-    .tickPadding(8)
-    .ticks(31);
-//创建x轴
-var xAxis = d3.svg.axis()
-    .scale(xscale)
-    .orient("bottom")
-    .tickPadding(8)
-    .ticks(31);
-//创建z轴
-var zAxis = d3.svg.axis()
-    .scale(xscale)
-    .orient("bottom")
-    .tickPadding(8)
-    .ticks(31);
+//饼图布局
+var pie =d3.layout.pie();//生成个饼图
+var piedata = pie(dataset);//饼图数据
+var piedata2 = pie(dataset2);//饼图数据
 
-/*** 添加坐标轴 ***/
-//添加y轴
-svg.append("g")
-    .attr("class","axis")
-    .attr("transform","translate(0,0)")
-    .attr("opacity",".7")
-    .call(yAxis);
-//添加x轴
-svg.append("g")
-    .attr("class","axis")
-    .attr("transform","translate(0,"+axisLen+")")
-    .attr("opacity",".7")
-    .call(xAxis);
-//添加z轴
-svg.append("g")
-    .attr("class","axis")
-    .attr("transform","translate(0,"+axisLen+") rotate(-45)")
-    .attr("opacity",".6")
-    .call(zAxis);
+var outR =400;
+var inR = 360;
+var inR2 = 320;
+var inR3 = 280;
 
-//添加文字
+
+//弧生成器
+var arc1 = d3.svg.arc()     //弧生成器
+            .innerRadius(inR)//外半径
+            .outerRadius(outR) //内半径
+            ;
+var arc2 = d3.svg.arc()
+            .innerRadius(inR2)//外半径
+            .outerRadius(inR) //内半径
+            ;
+var arc3 = d3.svg.arc()
+            .innerRadius(inR3)//外半径
+            .outerRadius(inR2) //内半径
+            ;
+
+var selectSector = d3.svg.arc()
+            .innerRadius(outR)//外半径
+            .outerRadius(inR3-20) //内半径
+            ;
+
+var second_circle= svg.append("g")
+    .attr("class","second_circle");
+var minute_circle= svg.append("g")
+    .attr("class","minute_circle");
+var hour_circle= svg.append("g")
+    .attr("class","hour_circle");
+
+var select_circle= svg.append("g")
+    .attr("class","select_circle");
+
+
+var gs_second = second_circle.selectAll("g")
+    .data(piedata)
+    .enter()
+    .append("g");
+ var gs_minute = minute_circle.selectAll("g")
+    .data(piedata)
+    .enter()
+    .append("g");
+ var gs_hour = hour_circle.selectAll("g")
+    .data(piedata2)
+    .enter()
+    .append("g");
+
+var gs_select = select_circle.append("g")
+    .attr("id","dddd")
+    .data([piedata[0]]);
+
+gs_select.append("path")
+    .attr("d",function(d,i){
+        return selectSector(d);
+    })
+    .attr("transform","rotate("+(-1*360/60/2)+")")
+    .attr("fill","none")
+    .attr("stroke","black")
+    .attr("stroke-width","4");
+
+   
+
+
+gs_second.append("path")
+    .attr("fill",function(d,i){
+        if((i+1)%5==0){
+            return "rgb(35,76,110)";    
+        }else{
+            return "steelblue";
+        }
+    })
+    .attr("d",function(d,i){
+        return arc1(d);
+    })
+    .on("mouseover",function(d,i){  //鼠标移上变黄
+        d3.select(this)
+            .style("fill","red");
+    })
+    .on("mouseout",function(d,i){
+        d3.select(this)
+            .transition()
+            .duration(200)
+            .style("fill",function(){
+                if((i+1)%5==0){
+                    return "rgb(35,76,110)";    
+                }else{
+                    return "steelblue";
+                }
+            });
+    });//鼠标移出变回原色;;
+gs_minute.append("path")
+    .attr("fill",function(d,i){
+        if((i+1)%5==0){
+            return "rgb(35,76,110)";    
+        }else{
+            return "steelblue";
+        }
+    })
+    .attr("d",function(d,i){
+        return arc2(d);
+    })
+    .on("mouseover",function(d,i){  //鼠标移上变黄
+        d3.select(this)
+            .style("fill","red");
+    })
+    .on("mouseout",function(d,i){
+        d3.select(this)
+            .transition()
+            .duration(200)
+            .style("fill",function(){
+                if((i+1)%5==0){
+                    return "rgb(35,76,110)";    
+                }else{
+                    return "steelblue";
+                }
+            });
+    });//鼠标移出变回原色;;
+gs_hour.append("path")
+    .attr("fill",function(d,i){
+        if((i+2)%5==0){
+            return "rgb(35,76,110)";    
+        }else{
+            return "steelblue";
+        }
+    })
+    .attr("d",function(d,i){
+        return arc3(d);
+    })
+    .on("mouseover",function(d,i){  //鼠标移上变黄
+        d3.select(this)
+            .style("fill","red");
+    })
+    .on("mouseout",function(d,i){
+        d3.select(this)
+            .transition()
+            .duration(200)
+            .style("fill",function(){
+                if((i+2)%5==0){
+                    return "rgb(35,76,110)";    
+                }else{
+                    return "steelblue";
+                }
+            });
+    });//鼠标移出变回原色;;
+
+
 svg.append("text")
-    .attr("x",axisLen+5)
-    .attr("y",axisLen)
-    .text("秒");
-svg.append("text")
-    .attr("x",0)
-    .attr("y",-3)
-    .text("分钟");
-svg.append("text")
-    .attr("x",axisLen/1.414+3)
-    .attr("y",axisLen-axisLen/1.414-3)
-    .text("小时");
-
+    .attr("class","explain")
+    .attr("x",-200)
+    .text("由内向外依次是：时、分、秒。黑框选出来的是现在的时间。");
 //将数字格式化，小于9的前面加0
 function FormatTime(hour,minute,second){
     if(hour<10){
@@ -91,6 +193,7 @@ function FormatTime(hour,minute,second){
 DrawNodes();
 
 function DrawNodes(){
+
     //获取当前时间
     var nowdate = new Date();
     var hour = nowdate.getHours();
@@ -102,26 +205,57 @@ function DrawNodes(){
     var time = document.getElementById("time");
     time.innerText = FormatTime(hour,minute,second);
 
-    //清除以前画的点，重新绘制
-    svg.selectAll(".time_circle").remove();
+    //清除以前画的字，重新绘制        
+    svg.selectAll(".tick").remove();
 
-    //绘制x轴上的点(秒)
-    svg.append("circle")
-        .attr("r",4)
-        .attr("class","time_circle")
-        .attr("transform","translate("+(xscale(second))+","+axisLen+")");
-    //绘制y轴上的点(分钟)
-    svg.append("circle")
-        .attr("r",4)
-        .attr("class","time_circle")
-        .attr("transform","translate("+0+","+yscale(minute)+")");
-    //绘制z轴上的点(小时)
-    svg.append("circle")
-        .attr("cx",xscale(hour)/1.414)
-        .attr("cy",axisLen - xscale(hour)/1.414)
-        .attr("r",4)
-        .attr("class","time_circle");
-    
+    gs_second.append("text")
+        .attr("class","tick")
+        .attr("transform",function(d){
+            return "translate(" + arc1.centroid(d) + ") rotate("+(-1*(second*360/60+360/60/2))+")";
+        })
+        .attr("text-anchor","middle")
+        .attr("fill","white")
+        .text(function(d,i){
+            return 59-i;
+        });
+    gs_minute.append("text")
+        .attr("class","tick")
+        .attr("transform",function(d){
+            return "translate(" + arc2.centroid(d) + ") rotate("+(-1*(minute*360/60+360/60/2))+")";
+        })
+        .attr("text-anchor","middle")
+        .attr("fill","white")
+        .text(function(d,i){
+            return 59-i;
+        });
+    gs_hour.append("text")
+        .attr("class","tick")
+        .attr("transform",function(d){
+            // console.log(d);
+            return "translate(" + arc3.centroid(d) + ") rotate("+(-1*(hour*360/24+360/24/2))+")";
+        })
+        .attr("text-anchor","middle")
+        .attr("fill","white")
+        .text(function(d,i){
+            return 23-i;
+        });
+    //旋转秒圈
+    svg.select(".second_circle") 
+        .attr("transform",function(d,i){
+            return "rotate("+(second*360/60+360/60/2)+")";
+        });
+     //旋转秒圈
+    svg.select(".minute_circle") 
+        .attr("transform",function(d,i){
+            return "rotate("+(minute*360/60+360/60/2)+")";
+        });
+     //旋转秒圈
+    svg.select(".hour_circle") 
+        .attr("transform",function(d,i){
+            return "rotate("+(hour*360/24+360/24/2)+")";
+        });
+
+  
 }
 //设置重新绘制的时间间隔
 setInterval(DrawNodes, 1000);
