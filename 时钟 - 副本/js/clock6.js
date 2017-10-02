@@ -56,6 +56,21 @@ function FormatTime(hour,minute,second){
     return hour+":"+minute+":"+second;
 }
 
+//添加文字
+var legend= svg.append("g")
+    .attr("transform","translate("+(axisLen-100) +",40)");
+legend.append("text")
+    .attr("y","20")
+    .text("● 时")
+    .attr("fill","blue");
+legend.append("text")
+    .attr("y","40")
+    .text("● 分")
+    .attr("fill","green");
+legend.append("text")
+    .text("● 秒")
+    .attr("fill","red");
+
 DrawNodes();
 
 function DrawNodes(){
@@ -79,21 +94,21 @@ function DrawNodes(){
     //绘制秒圈
     svg.append("circle")
         .attr("class","hour")
-        .attr("r",2)
+        .attr("r",3)
         .attr("cx",100)
         .attr("cy",function(){
             return yscale(hour);
         });
     svg.append("circle")
         .attr("class","minute")
-        .attr("r",2)
+        .attr("r",3)
         .attr("cx",200)
         .attr("cy",function(){
             return yscale(minute);
         });
     svg.append("circle")
         .attr("class","second")
-        .attr("r",2)
+        .attr("r",3)
         .attr("cx",300)
         .attr("cy",function(){
             return yscale(second);
@@ -143,3 +158,10 @@ function DrawNodes(){
 }
 //设置重新绘制的时间间隔
 setInterval(DrawNodes, 1000);
+
+//添加解释性文字
+svg.append("text")
+    .attr("class","explain")
+    .attr("x",10)
+    .attr("y",-8)
+    .text("使用折线图表示三类数据数值，绿蓝红分别代表：时、分、秒");

@@ -1,10 +1,53 @@
+
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>D3 for clock</title>
+
     <link rel="stylesheet" type="text/css" href="css/bootstrap-3.css">
     <link rel="stylesheet" href="css/style.css">
+    
+    
+    <title>时钟9:star bar</title>
+
+    <style type="text/css">
+    .axis path,
+    .axis line{
+        fill: none;
+        stroke: black;
+        shape-rendering: crispEdges;
+    }
+     
+    .axis text {
+
+        font-family: sans-serif;
+        font-size: 8px;
+        opacity: 0.5;
+    }
+    .yAxis text{
+        transform:translate(7px,0px);
+    }
+    .zAxis text{
+        transform:rotate(-150deg) translate(2px,-10px);
+    }
+    .xAxis text{
+        transform:rotate(-30deg) translate(0,-25px);
+    }
+
+    #time {
+        margin: 10px 20px;
+
+        width:100px;
+        height:20px;
+        font-size: 20px;
+        line-height: 20px;
+    }
+
+    .time_circle{
+        fill: red;
+    }
+    </style>
+
     <style type="text/css">
     body{
         height:1000px;
@@ -33,9 +76,7 @@
         color: white;
     }
 
-    .time_circle{
-        fill: red;
-    }
+   
     svg{
         margin: 0px 200px;
         color: black;
@@ -101,7 +142,7 @@
 
             <!-- 引入D3 -->
             <script src="js/d3.v3.min.js" charset="utf-8"></script>  
-            <script type="text/javascript" src="js/clock7.js"></script></div>
+            <script type="text/javascript" src="js/clock9.js"></script></div>
         <!-- /#page-content-wrapper -->
 
     </div>
@@ -141,3 +182,6 @@
     </script>
 </body>
 </html>
+
+
+

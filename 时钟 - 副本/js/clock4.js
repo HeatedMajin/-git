@@ -152,3 +152,10 @@ function DrawNodes(){
 }
 //设置重新绘制的时间间隔
 setInterval(DrawNodes, 1000);
+
+//添加解释性文字
+svg.append("text")
+    .attr("class","explain")
+    .attr("x",10)
+    .attr("y",-8)
+    .text("使用柱状图表示三类数据数值，绿蓝红分别代表：时、分、秒");

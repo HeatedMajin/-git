@@ -110,10 +110,11 @@ function DrawNodes(){
     svg.selectAll(".second").remove();
     svg.selectAll(".minute").remove();
     svg.selectAll(".hour").remove();
+    svg.selectAll(".line").remove();
 
     //绘制x轴上的点(秒)
     svg.append("circle")
-        .attr("r",4)
+        .attr("r",3)
         .attr("transform","translate("+0+","+xscale(second)+")")
         .attr("fill","red")
         .attr("class","second");
@@ -121,18 +122,39 @@ function DrawNodes(){
 
     //绘制y轴上的点(分钟)
     svg.append("circle")
-        .attr("r",4)
+        .attr("r",3)
         .attr("transform","translate("+axisLen/3+","+xscale(minute)+")")
         .attr("fill","green")
         .attr("class","minute");
 
     //绘制z轴上的点(小时)
     svg.append("circle")
-        .attr("r",4)
+        .attr("r",3)
         .attr("transform","translate("+axisLen*2/3+","+xscale(hour)+")")
         .attr("fill","blue")
         .attr("class","hour");
     
+    svg.append("line")
+        .attr("class","line") 
+        .attr("x1",0)
+        .attr("y1",xscale(second))
+        .attr("x2",axisLen/3)
+        .attr("y2",xscale(minute))
+        .attr("stroke","black");
+    svg.append("line")
+        .attr("class","line") 
+        .attr("x1",axisLen*2/3)
+        .attr("y1",xscale(hour))
+        .attr("x2",axisLen/3)
+        .attr("y2",xscale(minute))
+        .attr("stroke","black");
 }
 //设置重新绘制的时间间隔
 setInterval(DrawNodes, 1000);
+
+//添加解释性文字
+svg.append("text")
+    .attr("class","explain")
+    .attr("x",10)
+    .attr("y",-8)
+    .text("使用平型坐标系表示三类数据数值，绿蓝红分别代表：时、分、秒");

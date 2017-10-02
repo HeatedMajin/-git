@@ -8,37 +8,38 @@ var svg = d3.select("body").append("svg")
     .append("g")
     .attr("transform","translate("+60+","+20+")");
 
-var axisLen = 500;
+var axisLen3 = 300;
+var axisLen60 = 500;
 
 /***生成线性比例尺***/
 var xscale = d3.scale.linear()
     .domain([0,3])
-    .range([0,300]);
+    .range([0,axisLen3]);
 var yscale = d3.scale.linear()
-    .domain([60,0])
-    .range([0,axisLen]);
+    .domain([0,60])
+    .range([0,axisLen60]);
 
 /*** 创建坐标轴 ***/
-//创建y轴
+//创建横轴
 var yAxis = d3.svg.axis()
     .scale(yscale)
-    .orient("left")
+    .orient("bottom")
     .ticks(31);            
-//创建x轴
+//创建竖轴
 var xAxis = d3.svg.axis()
     .scale(xscale)
-    .orient("bottom")
-    .tickValues(["1","2","3"]);
+    .orient("left")
+    .tickValues(["0","0","0","0"]);
 
 /*** 添加坐标轴 ***/
-//添加y轴
+//添加横轴
 svg.append("g")
+    .attr("transform","translate(0,"+axisLen3+")")
     .attr("class","axis")
     .call(yAxis);
-//添加x轴
+//添加竖轴
 svg.append("g")
     .attr("class","axis")
-    .attr("transform","translate(0,"+axisLen+")")
     .call(xAxis);
 
 //将数字格式化，小于9的前面加0
@@ -51,11 +52,11 @@ function FormatTime(hour,minute,second){
     }
     if(second <10){
         second = "0"+second;
-
     }
     return hour+":"+minute+":"+second;
 }
 
+    
 DrawNodes();
 
 function DrawNodes(){
@@ -76,44 +77,38 @@ function DrawNodes(){
     svg.selectAll(".hour").remove();
     
 
-    var rectWidth = 50;
+    var rectWidth = 30;
     //绘制秒柱
     svg.append("rect")
         .attr("class","hour")
-        .attr("x",function(d,i){
-            return 100 - rectWidth/2;
-        })
+        .attr("x",0)
         .attr("y",function(){
+            return  0;
+        })
+        .attr("width",function(){
             return yscale(hour);
         })
-        .attr("width",rectWidth)
-        .attr("height",function(){
-            return axisLen - yscale(hour);
-        });
+        .attr("height",rectWidth);
     svg.append("rect")
         .attr("class","minute")
-        .attr("x",function(d,i){
-            return 200 - rectWidth/2;
+        .attr("x",0)
+        .attr("y",function(d,i){
+            return 100;
         })
-        .attr("y",function(){
-            return yscale(minute);
+        .attr("width",function(){
+            return  yscale(minute);
         })
-        .attr("width",rectWidth)
-        .attr("height",function(){
-            return axisLen - yscale(minute);
-        });
+        .attr("height",rectWidth);
     svg.append("rect")
         .attr("class","second")
-        .attr("x",function(d,i){
-             return 300 - rectWidth/2;
+        .attr("x",0)
+        .attr("y",function(d,i){
+             return 200 ;
         })
-        .attr("y",function(){
+        .attr("width",function(){
             return yscale(second);
         })
-        .attr("width",rectWidth)
-        .attr("height",function(){
-            return axisLen - yscale(second);
-        });
+        .attr("height",rectWidth);
 
 
     //删除文字
@@ -123,32 +118,39 @@ function DrawNodes(){
         .attr("class","timeText");
 
     legend.append("text")
-        .attr("x",function(d,i){
-             return 100 - rectWidth/2;
+        .attr("x",function(){
+            return yscale(hour);
         })
         .attr("y",function(){
-            return yscale(hour);
+            return 0;
         })
         .text("时:"+hour)
         .attr("fill","white");
     legend.append("text")
-        .attr("x",function(d,i){
-             return 200 - rectWidth/2;
+        .attr("x",function(){
+             return yscale(minute);
         })
         .attr("y",function(){
-            return yscale(minute);
+            return 100;
         })
         .text("分:"+minute)
         .attr("fill","white");
     legend.append("text")
-        .attr("x",function(d,i){
-             return 300 - rectWidth/2;
+        .attr("x",function(){
+             return yscale(second);
         })
         .attr("y",function(){
-            return yscale(second);
+            return 200;
         })
         .text("秒:"+second)
         .attr("fill","white");
 }
 //设置重新绘制的时间间隔
 setInterval(DrawNodes, 1000);
+
+//添加解释性文字
+svg.append("text")
+    .attr("class","explain")
+    .attr("x",10)
+    .attr("y",-8)
+    .text("使用横向柱状图表示三类数据数值，绿蓝红分别代表：时、分、秒");

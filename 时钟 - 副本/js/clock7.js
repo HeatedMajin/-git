@@ -125,3 +125,10 @@ function DrawNodes(){
 }
 //设置重新绘制的时间间隔
 setInterval(DrawNodes, 1000);
+
+//添加解释性文字
+svg.append("text")
+    .attr("class","explain")
+    .attr("x",100)
+    .attr("y",-8)
+    .text("在三维正交坐标系中表示时间数值，三个轴的意义分别是时分秒");

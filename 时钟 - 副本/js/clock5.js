@@ -56,6 +56,21 @@ function FormatTime(hour,minute,second){
     return hour+":"+minute+":"+second;
 }
 
+//添加文字
+var legend= svg.append("g")
+    .attr("transform","translate("+(axisLen-100) +",40)");
+legend.append("text")
+    .attr("y","20")
+    .text("● 时")
+    .attr("fill","blue");
+legend.append("text")
+    .attr("y","40")
+    .text("● 分")
+    .attr("fill","green");
+legend.append("text")
+    .text("● 秒")
+    .attr("fill","red");
+
 DrawNodes();
 
 function DrawNodes(){
@@ -111,19 +126,26 @@ function DrawNodes(){
         .attr("y",function(){
             return yscale(hour);
         })
-        .text("时:"+hour);
+        .text(hour+"时");
     legend.append("text")
         .attr("x",200)
         .attr("y",function(){
             return yscale(minute);
         })
-        .text("分:"+minute);
+        .text(minute+"分");
     legend.append("text")
         .attr("x",300)
         .attr("y",function(){
             return yscale(second);
         })
-        .text("秒:"+second);
+        .text(second+"秒");
 }
 //设置重新绘制的时间间隔
 setInterval(DrawNodes, 1000);
+
+//添加解释性文字
+svg.append("text")
+    .attr("class","explain")
+    .attr("x",10)
+    .attr("y",-8)
+    .text("使用散点图表示三类数据数值，绿蓝红分别代表：时、分、秒");
